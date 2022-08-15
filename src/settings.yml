@@ -1,0 +1,17 @@
+#
+# ███████╗░██████╗██████╗░░█████╗░░██╗░░░░░░░██╗███╗░░██╗
+# ██╔════╝██╔════╝██╔══██╗██╔══██╗░██║░░██╗░░██║████╗░██║
+# █████╗░░╚█████╗░██████╔╝███████║░╚██╗████╗██╔╝██╔██╗██║
+# ██╔══╝░░░╚═══██╗██╔═══╝░██╔══██║░░████╔═████║░██║╚████║
+# ██║░░░░░██████╔╝██║░░░░░██║░░██║░░╚██╔╝░╚██╔╝░██║░╚███║
+# ╚═╝░░░░░╚═════╝░╚═╝░░░░░╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░╚═╝░░╚══╝
+# The best slightly advanced plugin for setting up spawn.
+#
+#    Author: FilipeeX
+#    Discord: FilipeeX#8146
+#    Plugin: https://spigotmc.org/resource/xxxxxx/
+#
+
+# If plugin fESSENTIALS is found, this plugin will automaticly disable itself,
+# because this exact spawn feature is built into that plugin.
+disable-if-fessentials-is-found: true
