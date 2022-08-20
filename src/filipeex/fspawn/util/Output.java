@@ -8,14 +8,14 @@ public class Output {
 
     public static void log(String msg) {
 
-        String log = Chat.color(builtInPrefix + " " + msg);
+        String log = Chat.color(builtInPrefix + "&b " + msg);
         Bukkit.getConsoleSender().sendMessage(log);
 
     }
 
     public static void warn(String msg) {
 
-        String warn = Chat.color(builtInPrefix + "&xF&B&6&1&0&B " + msg);
+        String warn = Chat.color(builtInPrefix + "&x&F&B&6&1&0&B " + msg);
         Bukkit.getConsoleSender().sendMessage(warn);
 
     }

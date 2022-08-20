@@ -3,7 +3,6 @@
     <output-path>$PROJECT_DIR$/out</output-path>
     <root id="archive" name="fSPAWN.jar">
       <element id="module-output" name="fSPAWN" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Spigot Cores/spigot-1.19.2.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

@@ -1,0 +1,29 @@
+name: fSPAWN
+version: 1.0.0
+author: FilipeeX
+description: "Best advanced plugin for spawn."
+main: filipeex.fspawn.Main
+api-version: 1.19
+softdepend: [fESSENTIALS]
+
+commands:
+  setspawn:
+    description: "Sets spawn to your position or the position of another player."
+    usage: /<command> [player]
+  spawn:
+    description: "Teleports you or another player to spawn, if it's configured."
+    usage: /<command> [player]
+
+permissions:
+  fspawn.setspawn:
+    default: op
+    description: "Allows admin to set spawn on their position."
+  fspawn.setspawn.other:
+    default: op
+    description: "Allows admin to set spawn on another player's position, if they have the fspawn.setspawn permission."
+  fspawn.spawn:
+    default: true
+    description: "Allows player to teleport themselves to spawn."
+  fspawn.spawn.other:
+    default: op
+    description: "Allows admin to teleport another player to spawn."
