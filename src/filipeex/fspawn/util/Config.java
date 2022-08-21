@@ -72,6 +72,34 @@ public class Config {
         return success;
     }
 
+    public static boolean unloadSettings() {
+        boolean success = false;
+
+        settings = new YamlConfiguration();
+
+        return success;
+    }
+
+    public static boolean resetSettings() {
+        boolean success = true;
+
+        unloadSettings();
+
+        settingsFile = new File(Main.i.getDataFolder(), "settings.yml");
+        settingsFile.getParentFile().mkdirs();
+        Main.i.saveResource("settings.yml", true);
+
+        settings = new YamlConfiguration();
+        try {
+            settings.load(settingsFile);
+        } catch (Exception ex) {
+            success = false;
+            Output.err(ex.getMessage());
+        }
+
+        return success;
+    }
+
 
     // ██████╗░░█████╗░████████╗░█████╗░██████╗░░█████╗░░██████╗███████╗
     // ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝
@@ -133,6 +161,34 @@ public class Config {
         return success;
     }
 
+    public static boolean unloadData() {
+        boolean success = false;
+
+        data = new YamlConfiguration();
+
+        return success;
+    }
+
+    public static boolean resetData() {
+        boolean success = true;
+
+        unloadData();
+
+        dataFile = new File(Main.i.getDataFolder(), "data.yml");
+        dataFile.getParentFile().mkdirs();
+        Main.i.saveResource("data.yml", true);
+
+        data = new YamlConfiguration();
+        try {
+            data.load(dataFile);
+        } catch (Exception ex) {
+            success = false;
+            Output.err(ex.getMessage());
+        }
+
+        return success;
+    }
+
 
     // ███╗░░░███╗███████╗░██████╗░██████╗░█████╗░░██████╗░███████╗░██████╗
     // ████╗░████║██╔════╝██╔════╝██╔════╝██╔══██╗██╔════╝░██╔════╝██╔════╝
@@ -187,6 +243,34 @@ public class Config {
         try {
             messages.save(messagesFile);
         } catch (IOException ex) {
+            success = false;
+            Output.err(ex.getMessage());
+        }
+
+        return success;
+    }
+
+    public static boolean unloadMessages() {
+        boolean success = false;
+
+        messages = new YamlConfiguration();
+
+        return success;
+    }
+
+    public static boolean resetMessages() {
+        boolean success = true;
+
+        unloadMessages();
+
+        messagesFile = new File(Main.i.getDataFolder(), "messages.yml");
+        messagesFile.getParentFile().mkdirs();
+        Main.i.saveResource("messages.yml", true);
+
+        messages = new YamlConfiguration();
+        try {
+            messages.load(messagesFile);
+        } catch (Exception ex) {
             success = false;
             Output.err(ex.getMessage());
         }

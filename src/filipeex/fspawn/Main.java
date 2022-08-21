@@ -2,16 +2,20 @@ package filipeex.fspawn;
 
 import filipeex.fspawn.commands.SetSpawnCMD;
 import filipeex.fspawn.commands.SpawnCMD;
-import filipeex.fspawn.util.Config;
-import filipeex.fspawn.util.Output;
-import filipeex.fspawn.util.UpdateChecker;
+import filipeex.fspawn.listeners.PlayerConncetionLIS;
+import filipeex.fspawn.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 public class Main extends JavaPlugin {
 
     public static Main i = null;
+    public static boolean downloaded = false;
 
     @Override
     public void onLoad() {
@@ -30,9 +34,12 @@ public class Main extends JavaPlugin {
         Output.log("Enabling fSPAWN...");
 
         loadConfiguration();
+        updateConfiguration();
         registerCommands();
+        registerListeners();
         checkForEssentials();
         checkForUpdates();
+        bStats();
 
         Output.log("fSPAWN was enabled successfully!");
 
@@ -93,6 +100,32 @@ public class Main extends JavaPlugin {
 
     }
 
+    private void updateConfiguration() {
+
+        Output.log("Scanning configuration versions to see if there is an configration update available...");
+
+        Output.log("Scanning configuration version of settings.yml...");
+        if (ConfigUpdateUtil.doSettingsNeedConfigurationUpdate(getDescription().getVersion())) {
+            Output.log("File settings.yml needs a configuration update, executing...");
+            ConfigUpdateUtil.performSettingsConfigurationUpdate();
+            Output.log("Successfully applied a configuration update to settings.yml!");
+        } else {
+            Output.log("File settings.yml doesn't need a configuration update.");
+        }
+
+        Output.log("Scanning configuration version of messages.yml...");
+        if (ConfigUpdateUtil.doMessagesNeedConfigurationUpdate(getDescription().getVersion())) {
+            Output.log("File messages.yml needs a configuration update, executing...");
+            ConfigUpdateUtil.performMessagesConfigurationUpdate();
+            Output.log("Successfully applied a configuration update to messages.yml!");
+        } else {
+            Output.log("File messages.yml doesn't need a configuration update.");
+        }
+
+        Output.log("Configuration update section finished, moving on..");
+
+    }
+
     private void registerCommands() {
 
         Output.log("Registering commands...");
@@ -104,30 +137,74 @@ public class Main extends JavaPlugin {
 
     }
 
+    private void registerListeners() {
+
+        Output.log("Registering listeners...");
+
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(new PlayerConncetionLIS(), this);
+
+        Output.log("Successfully registered listeners!");
+
+    }
+
     private void checkForUpdates() {
 
         Output.log("Checking for updates...");
 
         if (UpdateChecker.checkForUpdate(getDescription().getVersion())) {
 
-            Output.warn("There is a new version of this plugin available, please download it as soon as possible!");
-            Output.warn("You are currently using %v, but the newest version of fSPAWN is %n."
-                    .replace("%v", getDescription().getVersion())
-                    .replace("%n", UpdateChecker.getActualVersion()));
+            if (!Config.getSettings().getBoolean("allow-self-update")) {
 
-            getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
-                public void run(){
+                Output.warn("There is a new version of this plugin available, please download it as soon as possible!");
+                Output.warn("You are currently using %v, but the newest version of fSPAWN is %n."
+                        .replace("%v", getDescription().getVersion())
+                        .replace("%n", UpdateChecker.getActualVersion()));
 
-                    Output.warn("There is a new version of this plugin available, please download it as soon as possible!");
-                    Output.warn("You are currently using %v, but the newest version of fSPAWN is %n."
-                            .replace("%v", getDescription().getVersion())
-                            .replace("%n", UpdateChecker.getActualVersion()));
+                getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+                    public void run() {
 
+                        Output.warn("There is a new version of this plugin available, please download it as soon as possible!");
+                        Output.warn("You are currently using %v, but the newest version of fSPAWN is %n."
+                                .replace("%v", getDescription().getVersion())
+                                .replace("%n", UpdateChecker.getActualVersion()));
+
+                    }
+                });
+
+            } else {
+
+                Output.log("There's a new version available, current: %v, newest: %n!".
+                        replace("%v", getDescription().getVersion()).
+                        replace("%n", UpdateChecker.getActualVersion()));
+                Output.log("Downoading the new fSPAWN.jar...");
+
+                if (UpdateDownloader.download(104579)) {
+                    Output.log("Downloading update successfull, please restart the server for the update to take effect.");
+                    downloaded = true;
+                } else {
+                    Output.err("Downloading update failed, please download it manually.");
                 }
-            });
+
+            }
 
         } else {
             Output.log("Checking for updates successful, no new updates found!");
+        }
+
+    }
+
+    private void bStats() {
+
+        try {
+
+            // All you have to do is adding the following two lines in your onEnable method.
+            // You can find the plugin ids of your plugins on the page https://bstats.org/what-is-my-plugin-id
+            int pluginId = 16213; // <-- Replace with the id of your plugin!
+            Metrics metrics = new Metrics(this, pluginId);
+
+        } catch (NoClassDefFoundError ex) {
+            Output.err("Statistics addon bStats cannot be loaded, an error occurred! Otherwise the plugin is functional.");
         }
 
     }

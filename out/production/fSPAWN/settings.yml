@@ -25,6 +25,12 @@ disable-if-fessentials-is-found: true
 #   they'll be greeted with an update message.
 update-notification: true
 
+# This option is here if self-updating the plugin
+# is causing any issues to your server.
+# You can turn it off, but it'll be a lot more
+# work for you and something might even break when you don't update the plugin at all.
+allow-self-update: true
+
 # If a player connects to your server for the first time ever,
 #   they'll be teleported to the spawn.
 teleport-after-first-join: true
@@ -50,4 +56,4 @@ teleport-after-joining: false
 teleport-delay: 5
 
 # DON'T YOU DARE EVEN TOUCH THIS
-version: 1.0.0
+version: 1.0.1

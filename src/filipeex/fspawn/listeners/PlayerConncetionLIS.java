@@ -100,6 +100,9 @@ public class PlayerConncetionLIS implements Listener {
         if (!p.hasPermission("fspawn.update"))
             return;
 
+        if (Main.downloaded)
+            return;
+
         new BukkitRunnable() {
             @Override
             public void run() {

@@ -30,4 +30,4 @@ update1: "%prefix% &fPlease download it here: &bhttps://www.spigotmc.org/resourc
 update2: "%prefix% &fYou are currently using version &b%v&f but the newest available is &d%n&f."
 
 # DON'T YOU DARE EVEN TOUCH THIS
-version: 1.0.0
+version: 1.0.1

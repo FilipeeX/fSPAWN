@@ -1,5 +1,5 @@
 name: fSPAWN
-version: 1.0.0
+version: 1.0.1
 author: FilipeeX
 description: "Best advanced plugin for spawn."
 main: filipeex.fspawn.Main
@@ -27,3 +27,6 @@ permissions:
   fspawn.spawn.other:
     default: op
     description: "Allows admin to teleport another player to spawn."
+  fspawn.update:
+    default: op
+    description: "Allows admin to see a chat notification if it's enabled in settings.yml and an update is available."
