@@ -55,5 +55,12 @@ teleport-after-joining: false
 # To disable - set teleport delay to 0, but i really don't recommend it.
 teleport-delay: 5
 
+# If this option is enabled (true), command /fspawn reload will be enabled.
+# If it's disabled, command won't be available.
+# This is very useful for someone who doesn't want to reload
+# plugins in this way, or doesn't wanna reload just configuration,
+# but the entire plugin.
+allow-fspawn-reload: true
+
 # DON'T YOU DARE EVEN TOUCH THIS
-version: 1.0.1
+version: 1.0.2

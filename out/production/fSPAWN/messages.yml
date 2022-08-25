@@ -13,6 +13,7 @@ no-permission: "%prefix% &cYou don't have permissions for that! (Permission need
 invalid-player: "%prefix% &cCan't seem to find player '%invalid%', please check if you typed everything correctly."
 player-only: "%prefix% &cThis action can only be executed by players."
 another-player-only: "%prefix% &cYou can't provide yourself as the argument for this action."
+module-disabled: "%prefix% &cThis module of fSPAWN is currently disabled. Most likely in settings.yml!"
 
 setspawn-usage: "%prefix% &fUsage: &b/setspawn [player]&f."
 setspawn-success-own: "%prefix% &fServer spawn was successfully set to &byour location&f!"
@@ -25,9 +26,12 @@ spawn-success-another: "%prefix% &fYou successfully teleported &b%target%&f to t
 spawn-success-by-admin: "%prefix% &fYou were &bteleported&f to the &bserver spawn&f by &ban admin or console&f!"
 spawn-failure-no-spawn: "%prefix% &cCan't teleport you, because there's no spawn configured. Please contact the admin to set it up by using /setspawn."
 
+fspawn-usage: "%prefix% &fUsage: &b/fspawn reload&f."
+fspawn-reload-success: "%prefix% &fConfiguration &areloaded successfully&f!"
+
 update0: "%prefix% &fThere's a &dnew version&f of fSPAWN available."
 update1: "%prefix% &fPlease download it here: &bhttps://www.spigotmc.org/resources/104579/&f!"
 update2: "%prefix% &fYou are currently using version &b%v&f but the newest available is &d%n&f."
 
 # DON'T YOU DARE EVEN TOUCH THIS
-version: 1.0.1
+version: 1.0.2
