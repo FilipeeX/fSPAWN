@@ -1,5 +1,6 @@
 package filipeex.fspawn;
 
+import filipeex.fspawn.commands.FSpawnCMD;
 import filipeex.fspawn.commands.SetSpawnCMD;
 import filipeex.fspawn.commands.SpawnCMD;
 import filipeex.fspawn.listeners.PlayerConncetionLIS;
@@ -57,7 +58,7 @@ public class Main extends JavaPlugin {
 
     private void checkForEssentials() {
 
-        if (!Config.getSettings().getBoolean("disable-if-essentials-is-found")) {
+        if (Config.getSettings().getBoolean("disable-if-fessentials-is-found")) {
             Output.log("Checking for fESSENTIALS...");
             if (getServer().getPluginManager().isPluginEnabled("fESSENTIALS")) {
                 Output.err("fESSENTIALS found, disabling fSPAWN because fESSENTIALS also does exactly what this plugin does!");
@@ -132,6 +133,7 @@ public class Main extends JavaPlugin {
 
         getCommand("setspawn").setExecutor(new SetSpawnCMD());
         getCommand("spawn").setExecutor(new SpawnCMD());
+        getCommand("fspawn").setExecutor(new FSpawnCMD());
 
         Output.log("Commands successfully registred!");
 
