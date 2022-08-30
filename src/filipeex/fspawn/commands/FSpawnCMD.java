@@ -1,13 +1,13 @@
 package filipeex.fspawn.commands;
 
-import filipeex.fspawn.abstracts.FCommand;
-import filipeex.fspawn.structs.Replacement;
-import filipeex.fspawn.structs.ReplacementSet;
-import filipeex.fspawn.structs.TabArgument;
-import filipeex.fspawn.structs.TabArgumentSet;
-import filipeex.fspawn.util.Config;
-import filipeex.fspawn.util.Message;
-import filipeex.fspawn.util.Output;
+import filipeex.fapi.abstracts.FCommand;
+import filipeex.fapi.structs.Replacement;
+import filipeex.fapi.structs.ReplacementSet;
+import filipeex.fapi.structs.TabArgumentSet;
+import filipeex.fapi.util.Config;
+import filipeex.fapi.util.Message;
+import filipeex.fapi.util.Output;
+import filipeex.fapi.util.PermUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -20,25 +20,23 @@ public class FSpawnCMD extends FCommand {
 
             if (args[0].equalsIgnoreCase("reload")) {
 
-                if (!Config.getSettings().getBoolean("allow-fspawn-reload")) {
+                if (!Config.getConfig("settings.yml").getBoolean("allow-fspawn-reload")) {
                     Message.send(sender, "module-disabled");
                     return;
                 }
 
-                if (!sender.hasPermission("fspawn.admin.reload")) {
-                    Message.send(sender, "no-permission", new ReplacementSet(new Replacement("%permission%", "fspawn.admin.reload")));
+                if (!PermUtil.hasPermission(sender, "fspawn.admin.reload"))
                     return;
-                }
 
                 Output.log("Reloading configuration...");
                 Output.log("Reloading settings.yml...");
-                Config.reloadSettings();
+                Config.reloadConfig("settings.yml");
                 Output.log("File settings.yml successfully reloaded!");
-                Output.log("Reloading data.yml...");
-                Config.reloadData();
-                Output.log("File data.yml successfully reloaded!");
+                Output.log("Reloading spawn.yml...");
+                Config.reloadConfig("spawn.yml");
+                Output.log("File spawn.yml successfully reloaded!");
                 Output.log("Reloading messages.yml...");
-                Config.reloadMessages();
+                Config.reloadConfig("messages.yml");
                 Output.log("File messages.yml successfully reloaded!");
                 Output.log("Finisged reloading configuration!");
 

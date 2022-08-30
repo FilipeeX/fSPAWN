@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/out</output-path>
     <root id="archive" name="fSPAWN.jar">
       <element id="module-output" name="fSPAWN" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../fAPI/out/fAPI.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

@@ -1,9 +1,12 @@
 package filipeex.fspawn.listeners;
 
+import filipeex.fapi.structs.Replacement;
+import filipeex.fapi.structs.ReplacementSet;
+import filipeex.fapi.util.Config;
+import filipeex.fapi.util.Message;
+import filipeex.fapi.util.Output;
+import filipeex.fapi.util.UpdateChecker;
 import filipeex.fspawn.Main;
-import filipeex.fspawn.structs.Replacement;
-import filipeex.fspawn.structs.ReplacementSet;
-import filipeex.fspawn.util.*;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,9 +22,34 @@ public class PlayerConncetionLIS implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent e) {
 
+        tpToLastLoc(e.getPlayer());
+        clearLastLoc(e.getPlayer());
         firstJoin(e.getPlayer());
         teleportToSpawn(e.getPlayer());
         sendUpdateMessage(e.getPlayer());
+
+    }
+
+    private void tpToLastLoc(Player p) {
+
+        if (Config.getDatabase("lastlocs.yml").contains(p.getUniqueId().toString()) &&
+            Config.getDatabase("lastlocs.yml").isLocation(p.getUniqueId().toString())) {
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    p.teleport(Config.getDatabase("lastlocs.yml").getLocation(p.getUniqueId().toString()));
+                }
+            }.runTaskLater(Main.i, 4);
+
+        }
+
+    }
+
+    private void clearLastLoc(Player p) {
+
+        Config.getDatabase("lastlocs.yml").set(p.getUniqueId().toString(), null);
+        Config.saveDatabase("lastlocs.yml");
 
     }
 
@@ -30,19 +58,19 @@ public class PlayerConncetionLIS implements Listener {
         if (p.hasPlayedBefore())
             return;
 
-        if (Config.getSettings().getBoolean("teleport-after-first-join")) {
+        if (Config.getConfig("settings.yml").getBoolean("teleport-after-first-join")) {
 
-            int delay = Config.getSettings().getInt("teleport-delay");
+            int delay = Config.getConfig("settings.yml").getInt("teleport-delay");
             new BukkitRunnable() {
                 @Override
                 public void run() {
 
-                    if (!Config.getData().contains("spawn") || !Config.getData().isLocation("spawn")) {
+                    if (!Config.getDatabase("spawn.yml").contains("spawn") || !Config.getDatabase("spawn.yml").isLocation("spawn")) {
                         Output.warn("Failed to teleport %p to spawn after first join (it's configured so in settings.yml)" +
                                 ", because the server spawn is not set. Please set spawn by using /setspawn.".
                                 replace("%p", p.getDisplayName()));
                     } else {
-                        Location spawnLoc = Config.getData().getLocation("spawn");
+                        Location spawnLoc = Config.getDatabase("spawn.yml").getLocation("spawn");
                         p.teleport(spawnLoc, PlayerTeleportEvent.TeleportCause.PLUGIN);
                         Output.log("Successfully teleported %p to spawn, after they're first server connection.".
                                 replace("%p", p.getDisplayName()));
@@ -64,19 +92,19 @@ public class PlayerConncetionLIS implements Listener {
         if (!p.hasPlayedBefore())
             return;
 
-        if (Config.getSettings().getBoolean("teleport-after-joining")) {
+        if (Config.getConfig("settings.yml").getBoolean("teleport-after-joining")) {
 
-            int delay = Config.getSettings().getInt("teleport-delay");
+            int delay = Config.getConfig("settings.yml").getInt("teleport-delay");
             new BukkitRunnable() {
                 @Override
                 public void run() {
 
-                    if (!Config.getData().contains("spawn") || !Config.getData().isLocation("spawn")) {
+                    if (!Config.getDatabase("spawn.yml").contains("spawn") || !Config.getDatabase("spawn.yml").isLocation("spawn")) {
                         Output.warn("Failed to teleport %p to spawn after joining (it's configured so in settings.yml)" +
                                 ", because the server spawn is not set. Please set spawn by using /setspawn.".
                                         replace("%p", p.getDisplayName()));
                     } else {
-                        Location spawnLoc = Config.getData().getLocation("spawn");
+                        Location spawnLoc = Config.getDatabase("spawn.yml").getLocation("spawn");
                         p.teleport(spawnLoc, PlayerTeleportEvent.TeleportCause.PLUGIN);
                         Output.log("Successfully teleported %p to spawn, after they connected (it's configured so in settings.yml).".
                                 replace("%p", p.getDisplayName()));
@@ -91,7 +119,7 @@ public class PlayerConncetionLIS implements Listener {
 
     private void sendUpdateMessage(Player p) {
 
-        if (!Config.getSettings().getBoolean("update-notification"))
+        if (!Config.getConfig("settings.yml").getBoolean("update-notification"))
             return;
 
         if (!UpdateChecker.checkForUpdate(Main.i.getDescription().getVersion()))
@@ -119,7 +147,14 @@ public class PlayerConncetionLIS implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLeave(PlayerQuitEvent e) {
 
-        // NOTHING
+        setLastLoc(e.getPlayer());
+
+    }
+
+    private void setLastLoc(Player p) {
+
+        Config.getDatabase("lastlocs.yml").set(p.getUniqueId().toString(), p.getLocation());
+        Config.saveDatabase("lastlocs.yml");
 
     }
 

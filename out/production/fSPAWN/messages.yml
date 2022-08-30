@@ -17,14 +17,18 @@ module-disabled: "%prefix% &cThis module of fSPAWN is currently disabled. Most l
 
 setspawn-usage: "%prefix% &fUsage: &b/setspawn [player]&f."
 setspawn-success-own: "%prefix% &fServer spawn was successfully set to &byour location&f!"
-setspawn-success-another: "%prefix% &fServer spawn was successfully set to player &b%target%'s location&f!"
+setspawn-success-another-online: "%prefix% &fServer spawn was successfully set to player &b%target%'s &8(&aONLINE&8)&b location&f!"
+setspawn-success-another-offline: "%prefix% &fServer spawn was successfully set to player &b%target%'s &8(&cOFFLINE&8)&b location&f!"
 setspawn-success-by-admin: "%prefix% &fServer spawn was set to &byour location&f by some &badmin or console&f!"
 
 spawn-usage: "%prefix% &fUsage: &b/spawn [player]&f."
 spawn-success-own: "%prefix% &fYou were successfully &bteleported&f to the &bserver spawn&f!"
-spawn-success-another: "%prefix% &fYou successfully teleported &b%target%&f to the server spawn!"
+spawn-success-another-online: "%prefix% &fYou successfully teleported &b%target%&f &8(&aONLINE&8)&f to the server spawn!"
+spawn-success-another-offline: "%prefix% &fYou successfully teleported &b%target%&f &8(&cOFFLINE&8)&f to the server spawn!"
+spawn-success-all-online: "%prefix% &fYou successfully teleported &b%count% players &8(&aONLINE&8)&f to server spawn!"
+spawn-success-all-offline: "%prefix% &fYou successfully teleported &b%count% player/s&f &8(&a%online%× ONLINE &8& &c%offline%× OFFLINE&8)&f to server spawn!"
 spawn-success-by-admin: "%prefix% &fYou were &bteleported&f to the &bserver spawn&f by &ban admin or console&f!"
-spawn-failure-no-spawn: "%prefix% &cCan't teleport you, because there's no spawn configured. Please contact the admin to set it up by using /setspawn."
+spawn-failure-no-spawn: "%prefix% &cCan't teleport, there's no spawn configured. Please contact the admin to set it up by using /setspawn."
 
 fspawn-usage: "%prefix% &fUsage: &b/fspawn reload&f."
 fspawn-reload-success: "%prefix% &fConfiguration &areloaded successfully&f!"
@@ -34,4 +38,4 @@ update1: "%prefix% &fPlease download it here: &bhttps://www.spigotmc.org/resourc
 update2: "%prefix% &fYou are currently using version &b%v&f but the newest available is &d%n&f."
 
 # DON'T YOU DARE EVEN TOUCH THIS
-version: 1.0.2
+version: 1.2

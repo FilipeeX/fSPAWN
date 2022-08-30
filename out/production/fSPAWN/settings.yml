@@ -63,4 +63,4 @@ teleport-delay: 5
 allow-fspawn-reload: true
 
 # DON'T YOU DARE EVEN TOUCH THIS
-version: 1.0.2
+version: 1.2

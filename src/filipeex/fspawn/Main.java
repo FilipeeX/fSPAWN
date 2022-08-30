@@ -1,17 +1,23 @@
 package filipeex.fspawn;
 
+import filipeex.fapi.FAPI;
+import filipeex.fapi.util.*;
 import filipeex.fspawn.commands.FSpawnCMD;
 import filipeex.fspawn.commands.SetSpawnCMD;
 import filipeex.fspawn.commands.SpawnCMD;
 import filipeex.fspawn.listeners.PlayerConncetionLIS;
-import filipeex.fspawn.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main extends JavaPlugin {
 
@@ -21,10 +27,10 @@ public class Main extends JavaPlugin {
     @Override
     public void onLoad() {
 
+        initializeAPI();
+
         Output.log("Loading fSPAWN...");
-
         setUpMainInstance();
-
         Output.log("fSPAWN was loaded successfully!");
 
     }
@@ -46,6 +52,12 @@ public class Main extends JavaPlugin {
 
     }
 
+    private void initializeAPI() {
+
+        FAPI.initialize(this, "&x&2&4&6&0&f&b&lf&x&3&5&5&5&f&5&lS&x&4&5&4&9&e&e&lP&x&5&6&3&e&e&8&lA&x&6&6&3&2&e&1&lW&x&7&7&2&7&d&b&lN&8 〣&f", 104579);
+
+    }
+
     private void setUpMainInstance() {
 
         Output.log("Setting up main instance...");
@@ -58,7 +70,7 @@ public class Main extends JavaPlugin {
 
     private void checkForEssentials() {
 
-        if (Config.getSettings().getBoolean("disable-if-fessentials-is-found")) {
+        if (Config.getConfig("settings.yml").getBoolean("disable-if-fessentials-is-found")) {
             Output.log("Checking for fESSENTIALS...");
             if (getServer().getPluginManager().isPluginEnabled("fESSENTIALS")) {
                 Output.err("fESSENTIALS found, disabling fSPAWN because fESSENTIALS also does exactly what this plugin does!");
@@ -74,7 +86,7 @@ public class Main extends JavaPlugin {
     private void loadConfiguration() {
 
         Output.log("Loading settings.yml...");
-        if (!Config.createSettings())
+        if (!Config.createConfig("settings.yml"))
             Output.warn("Configuration file settings.yml was loaded with errors, please fix them and reload it using /reload.");
         else
             Output.log("Configuration file settings.yml successfully loaded!");
@@ -84,17 +96,45 @@ public class Main extends JavaPlugin {
             @Override
             public void run() {
 
-                Output.log("Loading data.yml...");
-                if (!Config.createData())
-                    Output.log("Database file data.yml was loaded with errors, either it's corrupted or you messed it up. It is recommended to reset it, but it can also be harmful.");
+                Output.log("Loading spawn.yml...");
+                if (!Config.createDatabase("spawn.yml"))
+                    Output.log("Database file spawn.yml was loaded with errors, either it's corrupted or you messed it up. It is recommended to reset it, but it can also be harmful.");
                 else
-                    Output.log("Database file data.yml successfully loaded!");
+                    Output.log("Database file spawn.yml successfully loaded!");
+
+                Output.log("Loading lastlocs.yml...");
+                if (!Config.createDatabase("lastlocs.yml"))
+                    Output.log("Database file lastlocs.yml was loaded with errors, either it's corrupted or you messed it up. It is recommended to reset it, but it can also be harmful.");
+                else
+                    Output.log("Database file lastlocs.yml successfully loaded!");
+
+                File dataFile = new File(getDataFolder(), "data.yml");
+                if (!dataFile.exists())
+                    return;
+
+                try {
+
+                    HashMap<String, Object> tempStorage = new HashMap<String, Object>();
+                    FileConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
+
+                    for (String key : data.getKeys(true))
+                        tempStorage.put(key, data.get(key));
+
+                    for (Map.Entry<String, Object> entry : tempStorage.entrySet())
+                        Config.getDatabase("spawn.yml").set(entry.getKey(), entry.getValue());
+                    Config.saveDatabase("spawn.yml");
+
+                    dataFile.delete();
+
+                } catch (Exception ex) {
+                    Output.err("An error occurred while trying to move the database; " + ex.getMessage());
+                }
 
             }
         });
 
         Output.log("Loading messages.yml...");
-        if (!Config.createMessages())
+        if (!Config.createConfig("messages.yml"))
             Output.log("Language file messages.yml was loaded with errors, please fix them and reload it using /reload.");
         else
             Output.log("Successfully loaded language file messages.yml!");
@@ -106,18 +146,18 @@ public class Main extends JavaPlugin {
         Output.log("Scanning configuration versions to see if there is an configration update available...");
 
         Output.log("Scanning configuration version of settings.yml...");
-        if (ConfigUpdateUtil.doSettingsNeedConfigurationUpdate(getDescription().getVersion())) {
+        if (ConfigUpdateUtil.doesConfigNeedConfigurationUpdate("settings.yml", getDescription().getVersion())) {
             Output.log("File settings.yml needs a configuration update, executing...");
-            ConfigUpdateUtil.performSettingsConfigurationUpdate();
+            ConfigUpdateUtil.performConfigurationUpdate("settings.yml");
             Output.log("Successfully applied a configuration update to settings.yml!");
         } else {
             Output.log("File settings.yml doesn't need a configuration update.");
         }
 
         Output.log("Scanning configuration version of messages.yml...");
-        if (ConfigUpdateUtil.doMessagesNeedConfigurationUpdate(getDescription().getVersion())) {
+        if (ConfigUpdateUtil.doesConfigNeedConfigurationUpdate("messages.yml", getDescription().getVersion())) {
             Output.log("File messages.yml needs a configuration update, executing...");
-            ConfigUpdateUtil.performMessagesConfigurationUpdate();
+            ConfigUpdateUtil.performConfigurationUpdate("messages.yml");
             Output.log("Successfully applied a configuration update to messages.yml!");
         } else {
             Output.log("File messages.yml doesn't need a configuration update.");
@@ -156,7 +196,7 @@ public class Main extends JavaPlugin {
 
         if (UpdateChecker.checkForUpdate(getDescription().getVersion())) {
 
-            if (!Config.getSettings().getBoolean("allow-self-update")) {
+            if (!Config.getConfig("settings.yml").getBoolean("allow-self-update")) {
 
                 Output.warn("There is a new version of this plugin available, please download it as soon as possible!");
                 Output.warn("You are currently using %v, but the newest version of fSPAWN is %n."

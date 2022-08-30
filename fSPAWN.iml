@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="spigot-api-1.19.2-R0.1-20220805.215001-1-shaded" level="project" />
+    <orderEntry type="library" name="fAPI" level="project" />
   </component>
 </module>
